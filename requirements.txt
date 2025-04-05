@@ -1,0 +1,6 @@
+numpy
+pandas
+arxiv
+requests
+pathvalidate
+tenacity
