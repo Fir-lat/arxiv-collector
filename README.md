@@ -7,11 +7,25 @@ This repo is the python implementation of [arxiv-collector] which utilizes LLMs 
 
 ```bash
 arxiv_collection/
-├── config.py            # 配置文件
-├── arxiv_client.py      # arXiv数据获取模块
-├── paper_filter.py      # 论文筛选模块
-├── pdf_downloader.py    # PDF下载模块
-├── paper_analyzer.py    # 论文分析模块
-├── report_generator.py  # 报告生成模块
-└── main.py              # 主流程控制
+├── config.py            # configuration
+├── arxiv_client.py      # arXiv retriever
+├── paper_filter.py      # paper filter
+├── pdf_downloader.py    # paper downloader
+├── paper_analyzer.py    # paper analyzer
+├── report_generator.py  # report generator
+└── main.py              # main process
+```
+
+
+## DeepSeek API
+
+Please create the '''.env''' file :
+```bash
+touch .env
+```
+
+And place your deepseek api key as:
+
+```bash
+API_KEY=sk-XXX
 ```

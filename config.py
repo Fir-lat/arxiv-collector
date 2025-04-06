@@ -1,24 +1,24 @@
 import os
-
 from dotenv import load_dotenv
 
-load_dotenv()  # 加载环境变量
+load_dotenv()  # load environment variables from .env file
 
 class Config:
-    DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY")
+    API_KEY = os.getenv("DEEPSEEK_API_KEY")
+    BASE_URL = "https://api.deepseek.com"
     BASE_PATH = os.path.expanduser("../arxiv_collection") # Where your arxiv-collection is going to be
     CATEGORIES = ["cs.AI", "cs.CV", "cs.LG"]
     TARGET_TOPICS = [
-        "multi-modal understanding/generation",
+        "multi-modal understanding and generation",
         "unified model",
         "any-to-any generation",
         "embodied AI"
     ]
+    PAPER_LIMIT = 5
     
-    # 数据库路径（用于记录已处理论文）
+    # database
     DB_PATH = os.path.join(BASE_PATH, "processed_papers.db")
 
 if __name__ == '__main__':
-    config = Config()
-    os.makedirs(config.BASE_PATH, exist_ok=True)
-    print(config.DEEPSEEK_API_KEY)
+    os.makedirs(Config.BASE_PATH, exist_ok=True)
+    print(Config.DEEPSEEK_API_KEY)
