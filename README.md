@@ -13,6 +13,7 @@ arxiv_collection/
 ├── pdf_downloader.py    # paper downloader
 ├── paper_analyzer.py    # paper analyzer
 ├── report_generator.py  # report generator
+├── pdf_cleaner.py       # paper cache cleaner
 └── main.py              # main process
 ```
 
