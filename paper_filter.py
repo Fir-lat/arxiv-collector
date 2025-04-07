@@ -1,3 +1,4 @@
+import logging
 import requests
 import json
 from openai import OpenAI
@@ -7,7 +8,7 @@ from arxiv_client import ArxivClient
 class PaperFilter:
     @staticmethod
     def filter_papers(papers):
-        """使用DeepSeek API筛选论文"""
+        """Filter papers based on criteria using DeepSeek API"""
 
         system_prompt = f"""
             The user will provide a paper. Please analyze according to the instruction and output them in JSON format. 
@@ -31,7 +32,7 @@ class PaperFilter:
         client = OpenAI(api_key=Config.API_KEY, base_url=Config.BASE_URL)
         filtered = []
         for paper in papers:
-            # 构建分析提示词
+            # construct the prompt
             prompt = f"""Analyze this paper metadata and check if it meets ANY of these criteria:
             - {Config.TARGET_TOPICS}
             
@@ -40,7 +41,7 @@ class PaperFilter:
             Comments: {paper['comments']}
             """
             
-            # 调用DeepSeek API
+            # DeepSeek API
             messages = [
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": prompt}
@@ -53,21 +54,21 @@ class PaperFilter:
                 }
             )
 
-            # 解析响应
             try:
                 result = json.loads(response.choices[0].message.content)
                 if result['meets_criteria'] and result['relevance_score'] >= 8:
                     paper.update(result)
                     filtered.append(paper)
             except:
-                print(f"Error processing paper: {paper['title']}")
+                logging.info(f"Error processing paper: {paper['title']}")
                 continue
         
-        # 按相关性排序
+        # Sort papers by relevance score
         return sorted(filtered, key=lambda x: x['relevance_score'], reverse=True)
     
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
     arxiv_client = ArxivClient()
     new_papers = arxiv_client.get_new_papers()
 
@@ -77,16 +78,14 @@ if __name__ == '__main__':
     arxiv_client.conn.commit()
     arxiv_client.conn.close()
     
-    # 筛选论文
     filtered_papers = PaperFilter.filter_papers(new_papers)
     
-    # 打印筛选结果
     for paper in filtered_papers:
-        print(f"Title: {paper['title']}")
-        print(f"ID: {paper['id']}")
-        print(f"Published: {paper['published']}")
-        print(f"Relevance Score: {paper['relevance_score']}")
-        print(f"Category: {paper['category']}")
-        print(f"Conference Acceptance: {paper['conference_acceptance']}")
-        print(f"Key Innovations: {', '.join(paper['key_innovations'])}")
-        print("-" * 80)
+        logging.info(f"Title: {paper['title']}")
+        logging.info(f"ID: {paper['id']}")
+        logging.info(f"Published: {paper['published']}")
+        logging.info(f"Relevance Score: {paper['relevance_score']}")
+        logging.info(f"Category: {paper['category']}")
+        logging.info(f"Conference Acceptance: {paper['conference_acceptance']}")
+        logging.info(f"Key Innovations: {', '.join(paper['key_innovations'])}")
+        logging.info("-" * 80)

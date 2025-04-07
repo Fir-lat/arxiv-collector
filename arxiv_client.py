@@ -1,3 +1,4 @@
+import logging
 import arxiv
 from datetime import datetime, timedelta
 import sqlite3
@@ -42,32 +43,33 @@ class ArxivClient:
                     "pdf_url": result.pdf_url,
                     "published": result.published.date()
                 })
-        print(f"Found {len(new_papers)} new papers.")
+        logging.info(f"Found {len(new_papers)} new papers.")
         
         return new_papers
     
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
     client = ArxivClient()
     new_papers = client.get_new_papers()
     for paper in new_papers:
-        print(f"Title: {paper['title']}")
-        print(f"ID: {paper['id']}")
-        print(f"Published: {paper['published']}")
-        print(f"Comments: {paper['comments']}")
-        # print(f"Abstract: {paper['abstract']}")
-        print(f"PDF URL: {paper['pdf_url']}")
-        print("-" * 80)
+        logging.info(f"Title: {paper['title']}")
+        logging.info(f"ID: {paper['id']}")
+        logging.info(f"Published: {paper['published']}")
+        logging.info(f"Comments: {paper['comments']}")
+        # logging.info(f"Abstract: {paper['abstract']}")
+        logging.info(f"PDF URL: {paper['pdf_url']}")
+        logging.info("-" * 80)
         cursor = client.conn.cursor()
         cursor.execute("INSERT INTO processed (id, title) VALUES (?, ?)", 
                        (paper['id'], paper['title']))
         client.conn.commit()
-    # print the items in the database
+    # logging.info the items in the database
     cursor = client.conn.cursor()
     cursor.execute("SELECT * FROM processed")
     rows = cursor.fetchall()
     for row in rows:
-        print(row)
+        logging.info(row)
     # delete all items in the database
     cursor.execute("DELETE FROM processed")
     client.conn.commit()

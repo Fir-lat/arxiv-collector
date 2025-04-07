@@ -1,5 +1,5 @@
 import datetime
-import fitz  # PyMuPDF
+import logging
 import re
 import os
 import requests
@@ -74,6 +74,7 @@ class PaperAnalyzer:
             messages=messages,
             temperature=1.0,
         )
+
         
         return remove_markdown_wrapper(response.choices[0].message.content)
     
@@ -93,4 +94,4 @@ if __name__ == '__main__':
     for paper in filtered_papers:
         
         analysis_result = PaperAnalyzer.analyze_paper(paper)
-        print(analysis_result)
+        logging.info(analysis_result)

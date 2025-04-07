@@ -2,7 +2,9 @@
 .pdf
 .db
 *.env
+.log/
 credentials/
 __pycache__/
 *.db
 *.pdf
+

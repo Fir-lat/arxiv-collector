@@ -1,3 +1,4 @@
+import logging
 import datetime
 import os
 from config import Config
@@ -5,24 +6,29 @@ from config import Config
 class ReportGenerator:
     @staticmethod
     def generate_markdown(papers):
-        content = "# Daily Paper Report\n\n"
-        content += f"Data: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M')}\n\n"
+        filename = f"report_{datetime.date.today()}.md"
+        # check if filename exists
+        if os.path.exists(os.path.join(Config.BASE_PATH, filename)):
+            logging.warning(f"File {filename} already exists. Appending new content.")
+            content = "\n\n"
+        else:
+            content = "# Daily Paper Report\n\n"
+            content += f"Data: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M')}\n\n"
         
         for paper in papers:
             content += f"## {paper['title']}\n"
             content += f"- **URL**: [arXiv:{paper['id']}]({paper['pdf_url']})\n"
-            content += f"- **Category**: {paper['category']}/10\n"
+            content += f"- **Category**: {paper['category']}\n"
             content += f"- **Publication**: {paper.get('conference_acceptance', 'None')}\n\n"
             content += paper['analysis'] + "\n\n"
             content += "------\n\n"
         
-        filename = f"report_{datetime.date.today()}.md"
-        with open(os.path.join(Config.BASE_PATH, filename), 'w') as f:
+        
+        with open(os.path.join(Config.BASE_PATH, filename), 'a') as f:
             f.write(content)
 
 if __name__ == '__main__':
-    
-    # 假设已经有了筛选后的论文列表
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
     filtered_papers = [
         {
             "id": "2501.16718v1",

@@ -1,4 +1,5 @@
 import os
+import logging
 import requests
 from urllib.parse import unquote
 import datetime
@@ -42,6 +43,7 @@ class PDFDownloader:
 
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
     pdf_downloader = PDFDownloader()
     
     filtered_papers = [
@@ -56,5 +58,5 @@ if __name__ == '__main__':
     
     pdf_downloader.download(filtered_papers)
 
-    print(filtered_papers)
+    logging.info(filtered_papers)
     
