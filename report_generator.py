@@ -15,8 +15,8 @@ class ReportGenerator:
             content = "# Daily Paper Report\n\n"
             content += f"Data: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M')}\n\n"
         
-        for paper in papers:
-            content += f"## {paper['title']}\n"
+        for i, paper in enumerate(papers):
+            content += f"## {i} {paper['title']}\n"
             content += f"- **URL**: [arXiv:{paper['id']}]({paper['pdf_url']})\n"
             content += f"- **Category**: {paper['category']}\n"
             content += f"- **Publication**: {paper.get('conference_acceptance', 'None')}\n\n"

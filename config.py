@@ -14,9 +14,9 @@ class Config:
         "any-to-any generation",
         "embodied AI"
     ]
-    PAPER_LIMIT = 10  # Number of papers to fetch from arXiv
+    PAPER_LIMIT = 200  # Number of papers to fetch from arXiv
     
-    MAX_STORAGE_GB = 0.11          # max storage size in GB
+    MAX_STORAGE_GB = 10         # max storage size in GB
     AUTO_CLEAN_DAYS = 60         # automatic clean up days
     CLEANUP_THRESHOLD = 0.9
     

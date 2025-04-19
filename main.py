@@ -36,7 +36,7 @@ def main():
         [(p['id'][:-2], p['title']) for p in new_papers]
     )
     client.conn.commit()
-    client.conn.close()
+    
     
     # filter papers
     filtered_papers = PaperFilter.filter_papers(new_papers)
@@ -44,6 +44,14 @@ def main():
     
     # download PDFs
     PDFDownloader.download(filtered_papers)
+    # check if the PDFs are downloaded
+    for paper in filtered_papers:
+        if not os.path.exists(paper['local_path']):
+            # remove the paper in the sqlite database
+            client.conn.execute("DELETE FROM processed WHERE id = ?", (paper['id'][:-2],))
+            client.conn.commit()
+            logging.warning(f"PDF not found for {paper['id']}. Removed from database.")
+        # logging.info(f"Downloaded PDF for {paper['id']}: {paper['local_path']}")
     
     # analyze papers
     for i, paper in enumerate(filtered_papers):
@@ -55,6 +63,8 @@ def main():
 
     # clean up PDFs
     PDFCacheCleaner.cleanup_pdfs()
+
+    client.conn.close()
     
 if __name__ == "__main__":
     main()
